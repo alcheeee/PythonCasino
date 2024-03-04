@@ -68,7 +68,7 @@ def Slots(coins):
                         track_score[i] = 1
 
                 for key, value in track_score.items():
-                    if value >= REQUIRED:
+                    if value >= REQUIRED and value not in ['F','B']:
                         total_score += calculate_values(key, value)
 
                     elif value >= 3 and key in ['F', 'B']:
@@ -88,9 +88,13 @@ def Slots(coins):
 
                 if FEATURE_ACTIVE:
                     random_multi = random.randint(3,50)
-                    amount_won = amount_won * random_multi
                     print('Feature Active, win multiplied by', random_multi)
-                    FEATURE_ACTIVE = False
+                    print('Active Until a win.')
+                    if amount_won > 0:
+                        amount_won = amount_won * random_multi
+                        FEATURE_ACTIVE = False
+                    else:
+                        pass
 
                 if amount_won > 0:
                     coins += amount_won
@@ -102,7 +106,7 @@ def Slots(coins):
                     print('')
 
                 print(f'Spins Left: {spins-spin_count}\nCoins: {coins}')
-
+                adjust_coins(coins)
                 time.sleep(2)
                 Clear()
             continue
@@ -117,13 +121,10 @@ def Slots(coins):
 
 
 def calculate_values(value, count):
-    if value in ['B', 'F']:
-        return value
-    else:
-        extra_points = count - REQUIRED
-        base_value = slot_values[value]
-        total_score = base_value + ((base_value * extra_points)/2)
-        return total_score
+    extra_points = count - REQUIRED
+    base_value = slot_values[value]
+    total_score = base_value + ((base_value * extra_points)/2)
+    return total_score
 
 def generate_roll():
     random_results = random.choices(
@@ -145,7 +146,7 @@ def BetCheck(bet: int, coins: int):
     """
     Check user bet to make sure its valid
     """
-    if bet.is_integer() and bet <= coins and bet >= MIN_BET:
+    if bet <= coins and bet >= MIN_BET and bet != 0:
         return True
     else:
         return False

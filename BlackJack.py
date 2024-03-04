@@ -191,7 +191,7 @@ def BetCheck(bet: int, coins: int):
     """
     Check user bet to make sure its valid
     """
-    if bet.is_integer() and bet <= coins and bet != 0:
+    if bet <= coins and bet != 0:
         return True
     else:
         return False
